@@ -12,15 +12,15 @@ const SplashScreen = ({ navigation }) => {
     }, [navigation]);
 
     return(
-        <View style={StyleSheet.splashContainer}>
+        <View style={styles.splashContainer}>
             <Image 
                 source={{uri: 'https://m.media-amazon.com/images/I/51N3Xi4JJML._AC_SX679_.jpg'}} 
-                style={StyleSheet.splashImage}
+                style={styles.splashImage}
             />
             <ActivityIndicator 
                 size="large"
                 color="#0000ff"
-                style={StyleSheet.loader}
+                style={styles.loader}
             />
         </View>
     )
