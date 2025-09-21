@@ -1,6 +1,5 @@
+import Rotas from './components/Rotas';
+
 export default function App() {
-  return (
-    <>
-    </>
-  );
+    return <Rotas />;
 }
