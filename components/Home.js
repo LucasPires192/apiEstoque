@@ -1,85 +1,84 @@
-import React, { useState, useEffect} from 'react';
-import { View, Alert, FlatList, StyleSHeet, TouchbleOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Alert, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Text, IconButton } from 'react-native-paper';
-import { fetchEstoque, deleteEstoque } from './Api';
+import { fetchProdutos, deleteProdutos } from './Api';
 
-export default function Home({navigation}){
-    const [registro, setRegistro] = useState([]);
+export default function Home({ navigation }) {
+    const [registro, setRegistros] = useState([]);
 
     useEffect(() => {
-        fetchEstoque(setEstoque);
+        fetchProdutos(setRegistros);
     }, []);
 
     const handleDelete = (id) => {
         Alert.alert(
-            'Confirmado',
-            'Tem certeza de que deseja deletar este item?',
+            'Confirmação',
+            'Tem certeza de que deseja deletar este  Produto?',
             [
-                {text: 'Cancelar', style: 'cancel'},
-                {text: 'Deletar', onPress: () => deleteEstoque(id, setRegistro)},
+                { text: 'Cancelar', style: 'cancel' },
+                { text: 'Deletar', onPress: () => deleteProdutos(id, setRegistros)},
             ]
-        )
-    }
+        );
+    };
 
-    return(
+    return (
         <View style={styles.container}>
-            <FlatList 
+            <FlatList
                 data={registro}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({item}) => {
+                renderItem={({ item }) => (
                     <Card style={styles.card}>
                         <View style={styles.cardContent}>
                             {/* Coluna da esquerda: texto */}
                             <View style={styles.infoColumn}>
                                 <Text style={styles.title}>Código: {item.id}</Text>
-                                <Text>Produto: {item.produto}</Text>
+                                <Text>Produto: {item.nome}</Text>
                                 <Text>Marca: {item.marca}</Text>
-                                <Text>Valor: {item.valor}</Text>
+                                <Text>Preço: {item.preco}</Text>
                             </View>
 
                             {/* Coluna da direita: botões */}
                             <View style={styles.actionsColumn}>
-                                <IconButton 
+                                <IconButton
                                     icon="pencil"
                                     size={24}
-                                    iconColor='#3498DB'
-                                    onPress={() => navigation.navigate('Alterar', { Estoque: item})}
+                                    iconColor="#3498db"
+                                    onPress={() => navigation.navigate('Alterar', { produtos: item })}
                                 />
-                                <IconButton 
+                                <IconButton
                                     icon="delete"
                                     size={24}
-                                    iconColor="#E74C3C"
-                                    onPress={() => handleDelete(item.is)}
+                                    iconColor="#e74c3c"
+                                    onPress={() => handleDelete(item.id)}
                                 />
                             </View>
                         </View>
                     </Card>
-                }}
+                )}
             />
 
-            <TouchbleOpacity 
+            <TouchableOpacity
                 style={styles.floatingButton}
                 onPress={() => navigation.navigate('Cadastro')}
             >
-                <Text style={styles.plusIcon}>+</Text>
-            </TouchbleOpacity>
+                <Text style={styles.plusIcon}>＋</Text>
+            </TouchableOpacity>
         </View>
-    )
+    );
 }
 
-const styles = StyleSHeet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 10,    
+        padding: 10,
     },
     card: {
         marginBottom: 5,
-        alevation: 3,
+        elevation: 3,
         borderRadius: 8,
         backgroundColor: '#fff',
     },
     cardContent: {
-        flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 5,
@@ -90,7 +89,7 @@ const styles = StyleSHeet.create({
     },
     actionsColumn: {
         justifyContent: 'space-around',
-        alignItens: 'center',
+        alignItems: 'center',
     },
     title: {
         fontWeight: 'bold',
@@ -100,12 +99,12 @@ const styles = StyleSHeet.create({
         position: 'absolute',
         bottom: 20,
         alignSelf: 'center',
-        backgroundColor: '#24AE60',
+        backgroundColor: '#27ae60',
         width: 60,
         height: 60,
         borderRadius: 30,
         justifyContent: 'center',
-        alignItens: 'center',
+        alignItems: 'center',
         elevation: 5,
     },
     plusIcon: {
@@ -114,4 +113,4 @@ const styles = StyleSHeet.create({
         lineHeight: 36,
         marginBottom: 2,
     },
-})
+});

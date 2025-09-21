@@ -1,35 +1,36 @@
-const API_URL = 'https://siteapi/';
+const API_URL = 'https://apiestoque.webapptech.site/api/produtos';
 import { Alert } from 'react-native';
 
-export const fetchEstoque = async (setRegistros) => {
+
+export const fetchProdutos = async (setRegistros) => {
     try {
         const response = await fetch(API_URL);
         if (!response.ok) {
-            throw new Error('Erro ao buscar o Estoque');
+            throw new Error('Erro ao buscar os produtos');
         }
-        const data = await response.json();
-        console.log('Estoques recebidos da API:', data);
-        setRegistros(data.data);
+        const dados = await response.json();
+        console.log('Produtos recebidos da API:', dados);
+        setRegistros(dados.data);
     } catch (error) {
-        console.error('Erro ao buscar o Estoque:', error);
+        console.error('Erro ao buscar um produto:', error);
         throw error;
     }
 };
 
-export const createEstoque = async (EstoqueData) => {
+export const createProdutos = async (produtoData) => {
     try {
-        const response = await fetch('https://siteapi/', {
+        const response = await fetch('https://apiestoque.webapptech.site/api/produtos', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(EstoqueData),
+            body: JSON.stringify(produtoData),
         });
 
         // Verifica se a API retornou status 204 (sem conteúdo)
         if (response.status === 204) {
             Alert.alert('Sucesso!', 'Cadastro realizado com sucesso!');
-            return {};
+            return {}; // Retorna um objeto vazio para evitar erro
         }
 
         // Caso a API retorne conteúdo, tentamos converter para JSON
@@ -50,58 +51,57 @@ export const createEstoque = async (EstoqueData) => {
 
         return responseData;
     } catch (error) {
-        console.error('Erro ao cadastrar o Estoque:', error.message);
+        console.error('Erro ao cadastrar o produto:', error.message);
         Alert.alert('Erro ao cadastrar', `Detalhes: ${error.message}`);
         return null;
     }
 };
 
-export const deleteEstoque = async (EstoqueId, setRegistros) => {
+
+export const deleteProdutos = async (produtoId, setRegistros) => {
     try {
-        const response = await fetch(`https://siteapi/${EstoqueId}`, {
+        const response = await fetch(`https://apiestoque.webapptech.site/api/produtos/${produtoId}`, {
             method: 'DELETE',
         });
 
-        // Verifica se a resposta foi bem-sucedida
+
         if (response.ok) {
             const responseData = await response.json();
 
             if (responseData.success) {
                 Alert.alert('Sucesso!', responseData.message);
-                // Atualiza a lista localmente
+
                 setRegistros((prevRegistros) => {
-                    const novaLista = prevRegistros.filter(
-                        (Estoques) => Estoques.codigo !== EstoqueId
-                    );
-                    console.log('Nova lista de Estoques:', novaLista);
+                    const novaLista = prevRegistros.filter((produtos) => produtos.codigo != produtoId);
+                    console.log('Nova lista de produtos:', novaLista);
                     return novaLista;
                 });
+
             } else {
                 Alert.alert('Erro', responseData.message);
             }
         } else {
-            // Caso a resposta não seja ok, tenta processar a mensagem de erro
+
             const textResponse = await response.text();
             let responseData = null;
+
             try {
                 responseData = JSON.parse(textResponse);
             } catch (error) {
                 console.warn('A resposta não é um JSON válido.');
-                responseData = null;
             }
-            throw new Error(
-                responseData?.message || 'Erro desconhecido ao excluir o Estoque'
-            );
+
+            throw new Error(responseData?.message || 'Erro desconhecido ao excluir o produtos');
         }
     } catch (error) {
-        console.error('Erro ao excluir Estoque:', error.message);
+        console.error('Erro ao excluir o produto:', error.message);
         Alert.alert('Erro ao excluir', `Detalhes: ${error.message}`);
     }
 };
 
-export const updateEstoque = async (EstoqueId, updatedData, navigation) => {
+export const updateprodutos = async (produtoId, updatedData, navigation) => {
     try {
-        const response = await fetch(`https://siteapi/${EstoqueId}`, {
+        const response = await fetch(`https://apiestoque.webapptech.site/api/produtos${produtosId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ export const updateEstoque = async (EstoqueId, updatedData, navigation) => {
         console.log('Dados enviados:', updatedData);
 
         if (response.status === 200) {
-            Alert.alert('Sucesso!', 'Estoque atualizado com sucesso!');
+            Alert.alert('Sucesso!', 'Produtos atualizado com sucesso!');
             navigation.navigate('Home');
         } else {
             const textResponse = await response.text();
@@ -124,12 +124,10 @@ export const updateEstoque = async (EstoqueId, updatedData, navigation) => {
                 responseData = null;
             }
 
-            throw new Error(
-                responseData?.message || 'Erro desconhecido ao atualizar o Estoque'
-            );
+            throw new Error(responseData?.message || 'Erro desconhecido ao atualizar o produtos');
         }
     } catch (error) {
-        console.error('Erro ao atualizar o Estoque:', error.message);
+        console.error('Erro ao atualizar os produtos:', error.message);
         Alert.alert('Erro ao atualizar', `Detalhes: ${error.message}`);
     }
 };
